@@ -24,6 +24,9 @@ def information( support ):
             info += ( -(float(val)/sumValues) * log((float(val)/sumValues),2) )
     return info
 
+# Creates a dictionary of dictionaries
+# Dictionary is a key-value pair of each unique visit number to a subdictionary
+# Subdictionary contains key-value pairs of the TripType to its support
 def generateVisitNumberTable( row ):
     if row[1] in visitNumberDict:
         if row[0] in visitNumberDict[row[1]]:
@@ -34,6 +37,7 @@ def generateVisitNumberTable( row ):
         visitNumberDict[row[1]] = {row[0]: 1}
     return
 
+# Same as function above -- for department description
 def generateDepartmentDescriptionTable( row ):
     if row[5] in departmentDescriptionDict:
         if row[0] in departmentDescriptionDict[row[5]]:
@@ -43,6 +47,7 @@ def generateDepartmentDescriptionTable( row ):
     else:
         departmentDescriptionDict[row[5]] = {row[0]: 1}
     return
+
 
 with open('train.csv', 'rb') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
