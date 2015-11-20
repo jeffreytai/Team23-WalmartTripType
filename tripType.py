@@ -13,7 +13,7 @@ finelineNumberDict = {}
 # Output: information
 # Example: information([1,2,3]) = 0.918
 # Example: information([1]) = 1.0
-def information( support ):
+def splitInformation( support ):
     numValues = len(support)
     sumValues = sum(support)
     if numValues == 1:
@@ -34,7 +34,7 @@ def calculateAttributeInformation( dict ):
             else:
                 copyDict[k] = v
 
-    return information(copyDict.values())
+    return splitInformation(copyDict.values())
 
 # Creates a dictionary of dictionaries
 # Dictionary is a key-value pair of each unique visit number to a subdictionary
@@ -69,7 +69,7 @@ def generateVisitNumberTable( row ):
 def calculateEntropy( dict, sumEntries ):
     entropy = 0.0
     for key,value in dict.items():
-        entropy += ( sum(value.values())/float(sumEntries) * information(value.values()) )
+        entropy += ( sum(value.values())/float(sumEntries) * splitInformation(value.values()) )
     return entropy
 
 
@@ -78,8 +78,9 @@ with open('train.csv', 'rb') as csvfile:
     attributes = reader.next()
 
     # Place values into respective arrays
-    for i in range(0, 100000):
-        row = reader.next()
+    for row in reader:
+    # for i in range(0, 600000):
+    #     row = reader.next()
 
         # Generate tables with support for each trip type
         generateAttributeTable(visitNumberDict, 1, row)
@@ -104,26 +105,20 @@ with open('train.csv', 'rb') as csvfile:
     finelineNumberEntropy = calculateEntropy(finelineNumberDict, sumEntries)
 
     # Calculate information
-    visitNumberInformation = calculateAttributeInformation(visitNumberDict)
-    weekdayInformation = calculateAttributeInformation(weekdayDict)
-    upcInformation = calculateAttributeInformation(upcDict)
-    scanCountInformation = calculateAttributeInformation(scanCountDict)
-    departmentInformation = calculateAttributeInformation(departmentDescriptionDict)
-    finelineNumberInformation = calculateAttributeInformation(finelineNumberDict)
+    visitNumberSI = calculateAttributeInformation(visitNumberDict)
+    weekdaySI = calculateAttributeInformation(weekdayDict)
+    upcSI = calculateAttributeInformation(upcDict)
+    scanCountSI = calculateAttributeInformation(scanCountDict)
+    departmentSI = calculateAttributeInformation(departmentDescriptionDict)
+    finelineNumberSI = calculateAttributeInformation(finelineNumberDict)
 
-    # print visitNumberInformation
-    # print weekdayInformation
-    # print upcInformation
-    # print scanCountInformation
-    # print departmentInformation
-    # print finelineNumberInformation
-
-    visitNumberIG = visitNumberInformation - visitNumberEntropy
-    weekDayIG = weekdayInformation - weekdayEntropy
-    upcIG = upcInformation - upcEntropy
-    scanCountIG = scanCountInformation - scanCountEntropy
-    departmentIG = departmentInformation - departmentEntropy
-    finelineNumberIG = finelineNumberInformation - finelineNumberEntropy
+    # Calculate information gain
+    visitNumberIG = visitNumberSI - visitNumberEntropy
+    weekDayIG = weekdaySI - weekdayEntropy
+    upcIG = upcSI - upcEntropy
+    scanCountIG = scanCountSI - scanCountEntropy
+    departmentIG = departmentSI - departmentEntropy
+    finelineNumberIG = finelineNumberSI - finelineNumberEntropy
 
     print visitNumberIG
     print weekDayIG
