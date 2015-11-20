@@ -24,6 +24,18 @@ def information( support ):
             info += ( -(float(val)/sumValues) * log((float(val)/sumValues),2) )
     return info
 
+# Calculates information for entire attribute
+def calculateAttributeInformation( dict ):
+    copyDict = {}
+    for key,value in dict.items():
+        for k,v in value.items():
+            if k in copyDict:
+                copyDict[k] += v
+            else:
+                copyDict[k] = v
+
+    return information(copyDict.values())
+
 # Creates a dictionary of dictionaries
 # Dictionary is a key-value pair of each unique visit number to a subdictionary
 # Subdictionary contains key-value pairs of the TripType to its support
@@ -66,7 +78,7 @@ with open('train.csv', 'rb') as csvfile:
     attributes = reader.next()
 
     # Place values into respective arrays
-    for i in range(0, 100):
+    for i in range(0, 100000):
         row = reader.next()
 
         # Generate tables with support for each trip type
@@ -91,11 +103,34 @@ with open('train.csv', 'rb') as csvfile:
     departmentEntropy = calculateEntropy(departmentDescriptionDict, sumEntries)
     finelineNumberEntropy = calculateEntropy(finelineNumberDict, sumEntries)
 
-    print visitNumberEntropy
-    print weekdayEntropy
-    print upcEntropy
-    print scanCountEntropy
-    print departmentEntropy
-    print finelineNumberEntropy
+    # Calculate information
+    visitNumberInformation = calculateAttributeInformation(visitNumberDict)
+    weekdayInformation = calculateAttributeInformation(weekdayDict)
+    upcInformation = calculateAttributeInformation(upcDict)
+    scanCountInformation = calculateAttributeInformation(scanCountDict)
+    departmentInformation = calculateAttributeInformation(departmentDescriptionDict)
+    finelineNumberInformation = calculateAttributeInformation(finelineNumberDict)
+
+    # print visitNumberInformation
+    # print weekdayInformation
+    # print upcInformation
+    # print scanCountInformation
+    # print departmentInformation
+    # print finelineNumberInformation
+
+    visitNumberIG = visitNumberInformation - visitNumberEntropy
+    weekDayIG = weekdayInformation - weekdayEntropy
+    upcIG = upcInformation - upcEntropy
+    scanCountIG = scanCountInformation - scanCountEntropy
+    departmentIG = departmentInformation - departmentEntropy
+    finelineNumberIG = finelineNumberInformation - finelineNumberEntropy
+
+    print visitNumberIG
+    print weekDayIG
+    print upcIG
+    print scanCountIG
+    print departmentIG
+    print finelineNumberIG
+
 
 csvfile.close()
