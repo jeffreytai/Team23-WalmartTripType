@@ -27,6 +27,22 @@ def information( support ):
 # Creates a dictionary of dictionaries
 # Dictionary is a key-value pair of each unique visit number to a subdictionary
 # Subdictionary contains key-value pairs of the TripType to its support
+# Parameters: dict (specific dictionary), index (respective position in row), row (contains information for that entry)
+def generateAttributeTable( dict, index, row ):
+    # Handles case of Upc being empty
+    if index == 3 and row[index] == '':
+        return
+    else:
+        if row[index] in dict:
+            if row[0] in dict[row[index]]:
+                dict[row[index]][row[0]] += 1
+            else:
+                dict[row[index]][row[0]] = 1
+        else:
+            dict[row[index]] = {row[0]: 1}
+    return
+
+# Unused -- just shows an example of how generateAttributeTable is working
 def generateVisitNumberTable( row ):
     if row[1] in visitNumberDict:
         if row[0] in visitNumberDict[row[1]]:
@@ -35,63 +51,6 @@ def generateVisitNumberTable( row ):
             visitNumberDict[row[1]][row[0]] = 1
     else:
         visitNumberDict[row[1]] = {row[0]: 1}
-    return
-
-# Same as function above -- for weekday
-def generateWeekdayTable( row ):
-    if row[2] in weekdayDict:
-        if row[0] in weekdayDict[row[2]]:
-            weekdayDict[row[2]][row[0]] += 1
-        else:
-            weekdayDict[row[2]][row[0]] = 1
-    else:
-        weekdayDict[row[2]] = {row[0]: 1}
-    return
-
-# Same as function above -- for upc
-# Upc might be empty
-def generateUpcTable( row ):
-    if row[3] != '':
-        if row[3] in upcDict:
-            if row[0] in upcDict[row[3]]:
-                upcDict[row[3]][row[0]] += 1
-            else:
-                upcDict[row[3]][row[0]] = 1
-        else:
-            upcDict[row[3]] = {row[0]: 1}
-    return
-
-# Same as function above -- for scan count
-def generateScanCountTable( row ):
-    if row[4] in scanCountDict:
-        if row[0] in scanCountDict[row[4]]:
-            scanCountDict[row[4]][row[0]] += 1
-        else:
-            scanCountDict[row[4]][row[0]] = 1
-    else:
-        scanCountDict[row[4]] = {row[0]: 1}
-    return
-
-# Same as function above -- for department description
-def generateDepartmentDescriptionTable( row ):
-    if row[5] in departmentDescriptionDict:
-        if row[0] in departmentDescriptionDict[row[5]]:
-            departmentDescriptionDict[row[5]][row[0]] += 1
-        else:
-            departmentDescriptionDict[row[5]][row[0]] = 1
-    else:
-        departmentDescriptionDict[row[5]] = {row[0]: 1}
-    return
-
-# Same as function above -- for fineline number
-def generateFinelineNumberTable( row ):
-    if row[6] in finelineNumberDict:
-        if row[0] in finelineNumberDict[row[6]]:
-            finelineNumberDict[row[6]][row[0]] += 1
-        else:
-            finelineNumberDict[row[6]][row[0]] = 1
-    else:
-        finelineNumberDict[row[6]] = {row[0]: 1}
     return
 
 # Calculate entropy for attribute
@@ -107,16 +66,16 @@ with open('train.csv', 'rb') as csvfile:
     attributes = reader.next()
 
     # Place values into respective arrays
-    for i in range(0, 50):
+    for i in range(0, 100):
         row = reader.next()
 
         # Generate tables with support for each trip type
-        generateVisitNumberTable(row)
-        generateWeekdayTable(row)
-        generateUpcTable(row)
-        generateScanCountTable(row)
-        generateDepartmentDescriptionTable(row)
-        generateFinelineNumberTable(row)
+        generateAttributeTable(visitNumberDict, 1, row)
+        generateAttributeTable(weekdayDict, 2, row)
+        generateAttributeTable(upcDict, 3, row)
+        generateAttributeTable(scanCountDict, 4, row)
+        generateAttributeTable(departmentDescriptionDict, 5, row)
+        generateAttributeTable(finelineNumberDict, 6, row)
 
     # Get sum of entries
     sumEntries = 0
@@ -132,11 +91,11 @@ with open('train.csv', 'rb') as csvfile:
     departmentEntropy = calculateEntropy(departmentDescriptionDict, sumEntries)
     finelineNumberEntropy = calculateEntropy(finelineNumberDict, sumEntries)
 
-    # print visitNumberEntropy
-    # print weekdayEntropy
-    # print upcEntropy
-    # print scanCountEntropy
-    # print departmentEntropy
-    # print finelineNumberEntropy
+    print visitNumberEntropy
+    print weekdayEntropy
+    print upcEntropy
+    print scanCountEntropy
+    print departmentEntropy
+    print finelineNumberEntropy
 
 csvfile.close()
