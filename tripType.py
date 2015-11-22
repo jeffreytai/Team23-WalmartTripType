@@ -36,6 +36,12 @@ def calculateEntropy( dict ):
 
     return information(copyDict.values())
 
+def calculateSplitInformation( dict ):
+    splitArray = []
+    for key,value in dict.items():
+        splitArray.append(sum(value.values()))
+    return information(splitArray)
+
 # Creates a dictionary of dictionaries
 # Dictionary is a key-value pair of each unique visit number to a subdictionary
 # Subdictionary contains key-value pairs of the TripType to its support
@@ -61,15 +67,20 @@ def calculateAverageEntropy( dict, sumEntries ):
         entropy += ( sum(value.values())/float(sumEntries) * information(value.values()) )
     return entropy
 
+def divide( num,den ):
+    if den == 0:
+        return 0
+    return num / den
+
 # Execution starts here
 with open('train.csv', 'rb') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
     attributes = reader.next()
 
     # Place values into respective arrays
-    for row in reader:
-    # for i in range(0, 600000):
-    #     row = reader.next()
+    # for row in reader:
+    for i in range(0, 3000):
+        row = reader.next()
 
         # Generate tables with support for each trip type
         generateAttributeTable(visitNumberDict, 1, row)
@@ -85,7 +96,7 @@ with open('train.csv', 'rb') as csvfile:
         for k,v in value.items():
             sumEntries += v
 
-    # Calculate entropy
+    # Calculate average entropy (or information)
     visitNumberAE = calculateAverageEntropy(visitNumberDict, sumEntries)
     weekdayAE = calculateAverageEntropy(weekdayDict, sumEntries)
     upcAE = calculateAverageEntropy(upcDict, sumEntries)
@@ -93,7 +104,7 @@ with open('train.csv', 'rb') as csvfile:
     departmentAE = calculateAverageEntropy(departmentDescriptionDict, sumEntries)
     finelineNumberAE = calculateAverageEntropy(finelineNumberDict, sumEntries)
 
-    # Calculate information
+    # Calculate total entropy
     visitNumberEntropy = calculateEntropy(visitNumberDict)
     weekdayEntropy = calculateEntropy(weekdayDict)
     upcEntropy = calculateEntropy(upcDict)
@@ -109,11 +120,27 @@ with open('train.csv', 'rb') as csvfile:
     departmentIG = departmentEntropy - departmentAE
     finelineNumberIG = finelineNumberEntropy - finelineNumberAE
 
-    print visitNumberIG
-    print weekDayIG
-    print upcIG
-    print scanCountIG
-    print departmentIG
-    print finelineNumberIG
+    # Calculate split info
+    visitNumberSI = calculateSplitInformation(visitNumberDict)
+    weekdaySI = calculateSplitInformation(weekdayDict)
+    upcSI = calculateSplitInformation(upcDict)
+    scanCountSI = calculateSplitInformation(scanCountDict)
+    departmentSI = calculateSplitInformation(departmentDescriptionDict)
+    finelineNumberSI = calculateSplitInformation(finelineNumberDict)
+
+    # Calculate gain ratio
+    visitNumberGR = divide(visitNumberIG, visitNumberSI)
+    weekdayGR = divide(weekDayIG, weekdaySI)
+    upcGR = divide(upcIG, upcSI)
+    scanCountGR = divide(scanCountIG, scanCountSI)
+    departmentGR = divide(departmentIG, departmentSI)
+    finelineNumberGR = divide(finelineNumberIG, finelineNumberSI)
+
+    print visitNumberGR
+    print weekdayGR
+    print upcGR
+    print scanCountGR
+    print departmentGR
+    print finelineNumberGR
 
 csvfile.close()
