@@ -10,10 +10,10 @@ departmentDescriptionDict = {}
 finelineNumberDict = {}
 
 # Parameter: array of number(s)
-# Output: information
+# Output: information or average entropy
 # Example: information([1,2,3]) = 0.918
 # Example: information([1]) = 1.0
-def splitInformation( support ):
+def information( support ):
     numValues = len(support)
     sumValues = sum(support)
     if numValues == 1:
@@ -24,8 +24,8 @@ def splitInformation( support ):
             info += ( -(float(val)/sumValues) * log((float(val)/sumValues),2) )
     return info
 
-# Calculates information for entire attribute
-def calculateAttributeInformation( dict ):
+# Calculates entropy for entire attribute
+def calculateEntropy( dict ):
     copyDict = {}
     for key,value in dict.items():
         for k,v in value.items():
@@ -34,7 +34,7 @@ def calculateAttributeInformation( dict ):
             else:
                 copyDict[k] = v
 
-    return splitInformation(copyDict.values())
+    return information(copyDict.values())
 
 # Creates a dictionary of dictionaries
 # Dictionary is a key-value pair of each unique visit number to a subdictionary
@@ -54,22 +54,11 @@ def generateAttributeTable( dict, index, row ):
             dict[row[index]] = {row[0]: 1}
     return
 
-# Unused -- just shows an example of how generateAttributeTable is working
-def generateVisitNumberTable( row ):
-    if row[1] in visitNumberDict:
-        if row[0] in visitNumberDict[row[1]]:
-            visitNumberDict[row[1]][row[0]] += 1
-        else:
-            visitNumberDict[row[1]][row[0]] = 1
-    else:
-        visitNumberDict[row[1]] = {row[0]: 1}
-    return
-
-# Calculate entropy for attribute
-def calculateEntropy( dict, sumEntries ):
+# Calculate average entropy (or information) for attribute
+def calculateAverageEntropy( dict, sumEntries ):
     entropy = 0.0
     for key,value in dict.items():
-        entropy += ( sum(value.values())/float(sumEntries) * splitInformation(value.values()) )
+        entropy += ( sum(value.values())/float(sumEntries) * information(value.values()) )
     return entropy
 
 # Execution starts here
@@ -97,28 +86,28 @@ with open('train.csv', 'rb') as csvfile:
             sumEntries += v
 
     # Calculate entropy
-    visitNumberEntropy = calculateEntropy(visitNumberDict, sumEntries)
-    weekdayEntropy = calculateEntropy(weekdayDict, sumEntries)
-    upcEntropy = calculateEntropy(upcDict, sumEntries)
-    scanCountEntropy = calculateEntropy(scanCountDict, sumEntries)
-    departmentEntropy = calculateEntropy(departmentDescriptionDict, sumEntries)
-    finelineNumberEntropy = calculateEntropy(finelineNumberDict, sumEntries)
+    visitNumberAE = calculateAverageEntropy(visitNumberDict, sumEntries)
+    weekdayAE = calculateAverageEntropy(weekdayDict, sumEntries)
+    upcAE = calculateAverageEntropy(upcDict, sumEntries)
+    scanCountAE = calculateAverageEntropy(scanCountDict, sumEntries)
+    departmentAE = calculateAverageEntropy(departmentDescriptionDict, sumEntries)
+    finelineNumberAE = calculateAverageEntropy(finelineNumberDict, sumEntries)
 
     # Calculate information
-    visitNumberSI = calculateAttributeInformation(visitNumberDict)
-    weekdaySI = calculateAttributeInformation(weekdayDict)
-    upcSI = calculateAttributeInformation(upcDict)
-    scanCountSI = calculateAttributeInformation(scanCountDict)
-    departmentSI = calculateAttributeInformation(departmentDescriptionDict)
-    finelineNumberSI = calculateAttributeInformation(finelineNumberDict)
+    visitNumberEntropy = calculateEntropy(visitNumberDict)
+    weekdayEntropy = calculateEntropy(weekdayDict)
+    upcEntropy = calculateEntropy(upcDict)
+    scanCountEntropy = calculateEntropy(scanCountDict)
+    departmentEntropy = calculateEntropy(departmentDescriptionDict)
+    finelineNumberEntropy = calculateEntropy(finelineNumberDict)
 
     # Calculate information gain
-    visitNumberIG = visitNumberSI - visitNumberEntropy
-    weekDayIG = weekdaySI - weekdayEntropy
-    upcIG = upcSI - upcEntropy
-    scanCountIG = scanCountSI - scanCountEntropy
-    departmentIG = departmentSI - departmentEntropy
-    finelineNumberIG = finelineNumberSI - finelineNumberEntropy
+    visitNumberIG = visitNumberEntropy - visitNumberAE
+    weekDayIG = weekdayEntropy - weekdayAE
+    upcIG = upcEntropy - upcAE
+    scanCountIG = scanCountEntropy - scanCountAE
+    departmentIG = departmentEntropy - departmentAE
+    finelineNumberIG = finelineNumberEntropy - finelineNumberAE
 
     print visitNumberIG
     print weekDayIG
@@ -126,8 +115,5 @@ with open('train.csv', 'rb') as csvfile:
     print scanCountIG
     print departmentIG
     print finelineNumberIG
-
-    
-
 
 csvfile.close()
