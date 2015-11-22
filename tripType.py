@@ -72,7 +72,7 @@ def calculateEntropy( dict, sumEntries ):
         entropy += ( sum(value.values())/float(sumEntries) * splitInformation(value.values()) )
     return entropy
 
-
+# Execution starts here
 with open('train.csv', 'rb') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
     attributes = reader.next()
@@ -126,6 +126,8 @@ with open('train.csv', 'rb') as csvfile:
     print scanCountIG
     print departmentIG
     print finelineNumberIG
+
+    
 
 
 csvfile.close()
