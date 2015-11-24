@@ -1,0 +1,122 @@
+import csv
+
+trainDepartmentDict = {}
+testDepartmentDict = {}
+
+def create_training_data_dictionary():
+    with open('train.csv', 'rb') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        attributes = reader.next()
+
+        # Place values into respective arrays
+        for row in reader:
+        # for i in range(0,100):
+        #     row = reader.next()
+
+            # null department??
+            if row[0] in trainDepartmentDict:
+                trainDepartmentDict[row[0]][row[5]] += int(row[4])
+            else:
+                trainDepartmentDict[row[0]] = {
+                        'FINANCIAL SERVICES': 0,
+                        'SHOES': 0,
+                        'PERSONAL CARE': 0,
+                        'PAINT AND ACCESSORIES': 0,
+                        'DSD GROCERY': 0,
+                        'MEAT - FRESH & FROZEN': 0,
+                        'DAIRY': 0,
+                        'PETS AND SUPPLIES': 0,
+                        'HOUSEHOLD CHEMICALS/SUPP': 0,
+                        'NULL': 0,
+                        'IMPULSE MERCHANDISE': 0,
+                        'PRODUCE': 0,
+                        'CANDY, TOBACCO, COOKIES': 0,
+                        'GROCERY DRY GOODS': 0,
+                        'BOYS WEAR': 0,
+                        'FABRICS AND CRAFTS': 0,
+                        'JEWELRY AND SUNGLASSES': 0,
+                        'MENS WEAR': 0,
+                        'ACCESSORIES': 0,
+                        'HOME MANAGEMENT': 0,
+                        'FROZEN FOODS': 0,
+                        'SERVICE DELI': 0,
+                        'INFANT CONSUMABLE HARDLINES': 0,
+                        'PRE PACKED DELI': 0,
+                        'COOK AND DINE': 0,
+                        'PHARMACY OTC': 0,
+                        'LADIESWEAR': 0,
+                        'COMM BREAD': 0,
+                        'BAKERY': 0,
+                        'HOUSEHOLD PAPER GOODS': 0,
+                        'CELEBRATION': 0,
+                        'HARDWARE': 0,
+                        'BEAUTY': 0,
+                        'AUTOMOTIVE': 0,
+                        'BOOKS AND MAGAZINES': 0,
+                        'SEAFOOD': 0,
+                        'OFFICE SUPPLIES': 0,
+                        'LAWN AND GARDEN': 0,
+                        'SHEER HOSIERY': 0,
+                        'WIRELESS': 0,
+                        'BEDDING': 0,
+                        'BATH AND SHOWER': 0,
+                        'HORTICULTURE AND ACCESS': 0,
+                        'HOME DECOR': 0,
+                        'TOYS': 0,
+                        'INFANT APPAREL': 0,
+                        'LADIES SOCKS': 0,
+                        'PLUS AND MATERNITY': 0,
+                        'ELECTRONICS': 0,
+                        'GIRLS WEAR, 4-6X  AND 7-14': 0,
+                        'BRAS & SHAPEWEAR': 0,
+                        'LIQUOR,WINE,BEER': 0,
+                        'SLEEPWEAR/FOUNDATIONS': 0,
+                        'CAMERAS AND SUPPLIES': 0,
+                        'SPORTING GOODS': 0,
+                        'PLAYERS AND ELECTRONICS': 0,
+                        'PHARMACY RX': 0,
+                        'MENSWEAR': 0,
+                        'OPTICAL - FRAMES': 0,
+                        'SWIMWEAR/OUTERWEAR': 0,
+                        'OTHER DEPARTMENTS': 0,
+                        'MEDIA AND GAMING': 0,
+                        'FURNITURE': 0,
+                        'OPTICAL - LENSES': 0,
+                        'SEASONAL': 0,
+                        'LARGE HOUSEHOLD GOODS': 0,
+                        '1-HR PHOTO': 0,
+                        'CONCEPT STORES': 0,
+                        'HEALTH AND BEAUTY AIDS': 0
+                    }
+                trainDepartmentDict[row[0]][row[5]] = int(row[4])
+
+    csvfile.close()
+
+def create_testing_data_dictionary():
+    with open('test.csv', 'rb') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        attributes = reader.next()
+
+        # for row in reader:
+        for i in range(0,4):
+            row = reader.next()
+
+            if row[0] in testDepartmentDict:
+                if row[4] in testDepartmentDict[row[0]]:
+                    testDepartmentDict[row[0]][row[4]] += int(row[3])
+                else:
+                    testDepartmentDict[row[0]][row[4]] = int(row[3])
+            else:
+                testDepartmentDict[row[0]] = {}
+                testDepartmentDict[row[0]][row[4]] = int(row[3])
+
+def classify_trip_type():
+    for visitNumber,department in testDepartmentDict.items():
+        print department.values()
+
+# create_training_data_dictionary()
+create_testing_data_dictionary()
+classify_trip_type()
+
+# print trainDepartmentDict
+# print testDepartmentDict

@@ -36,6 +36,7 @@ def calculateEntropy( dict ):
 
     return information(copyDict.values())
 
+# Calculate split information for entire attribute
 def calculateSplitInformation( dict ):
     splitArray = []
     for key,value in dict.items():
@@ -67,6 +68,7 @@ def calculateAverageEntropy( dict, sumEntries ):
         entropy += ( sum(value.values())/float(sumEntries) * information(value.values()) )
     return entropy
 
+# Divide by 0 will equal 0
 def divide( num,den ):
     if den == 0:
         return 0
@@ -78,9 +80,9 @@ with open('train.csv', 'rb') as csvfile:
     attributes = reader.next()
 
     # Place values into respective arrays
-    # for row in reader:
-    for i in range(0, 3000):
-        row = reader.next()
+    for row in reader:
+    # for i in range(0, 3000):
+        # row = reader.next()
 
         # Generate tables with support for each trip type
         generateAttributeTable(visitNumberDict, 1, row)
@@ -114,7 +116,7 @@ with open('train.csv', 'rb') as csvfile:
 
     # Calculate information gain
     visitNumberIG = visitNumberEntropy - visitNumberAE
-    weekDayIG = weekdayEntropy - weekdayAE
+    weekdayIG = weekdayEntropy - weekdayAE
     upcIG = upcEntropy - upcAE
     scanCountIG = scanCountEntropy - scanCountAE
     departmentIG = departmentEntropy - departmentAE
@@ -130,17 +132,12 @@ with open('train.csv', 'rb') as csvfile:
 
     # Calculate gain ratio
     visitNumberGR = divide(visitNumberIG, visitNumberSI)
-    weekdayGR = divide(weekDayIG, weekdaySI)
+    weekdayGR = divide(weekdayIG, weekdaySI)
     upcGR = divide(upcIG, upcSI)
     scanCountGR = divide(scanCountIG, scanCountSI)
     departmentGR = divide(departmentIG, departmentSI)
     finelineNumberGR = divide(finelineNumberIG, finelineNumberSI)
 
-    print visitNumberGR
-    print weekdayGR
-    print upcGR
-    print scanCountGR
-    print departmentGR
-    print finelineNumberGR
-
+    # Rank
+    # UPC -> Fineline Number -> Department Description -> Scan Count -> Weekday
 csvfile.close()
