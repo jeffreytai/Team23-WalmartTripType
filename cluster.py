@@ -3,6 +3,8 @@ from math import pow, sqrt
 
 trainDepartmentDict = {}
 testDepartmentDict = {}
+trainTripType = []
+testTripType = []
 
 # Paramters: 2 arrays
 # Output: distance between two arrays, using Euclidean distance
@@ -14,6 +16,7 @@ def calculate_distance( arr1, arr2 ):
 
 # Each entry in the training data dictionary corresponds to one cluster of visits
 # We include the support of all departments
+# There are 95,674 total clusters
 def create_training_data_dictionary():
     with open('train.csv', 'rb') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -25,10 +28,11 @@ def create_training_data_dictionary():
         #     row = reader.next()
 
             # null department??
-            if row[0] in trainDepartmentDict:
-                trainDepartmentDict[row[0]][row[5]] += int(row[4])
+            if row[1] in trainDepartmentDict:
+                trainDepartmentDict[row[1]][row[5]] += int(row[4])
             else:
-                trainDepartmentDict[row[0]] = {
+                trainTripType.append(row[0])
+                trainDepartmentDict[row[1]] = {
                         'FINANCIAL SERVICES': 0,
                         'SHOES': 0,
                         'PERSONAL CARE': 0,
@@ -99,9 +103,9 @@ def create_training_data_dictionary():
                         'CONCEPT STORES': 0,
                         'HEALTH AND BEAUTY AIDS': 0
                     }
-                trainDepartmentDict[row[0]][row[5]] = int(row[4])
-
+                trainDepartmentDict[row[1]][row[5]] = int(row[4])
     csvfile.close()
+    return
 
 # Each entry in the test data dictionary corresponds to one cluster of visits
 # We include ONLY the departments (and their support) that appear in the visit
@@ -111,7 +115,7 @@ def create_testing_data_dictionary():
         attributes = reader.next()
 
         # for row in reader:
-        for i in range(0,4):
+        for i in range(0,100):
             row = reader.next()
 
             if row[0] in testDepartmentDict:
@@ -122,21 +126,31 @@ def create_testing_data_dictionary():
             else:
                 testDepartmentDict[row[0]] = {}
                 testDepartmentDict[row[0]][row[4]] = int(row[3])
+    csvfile.close()
+    return
 
-def classify_trip_type():
+# Compare the relevant support of a visit's departments
+def classify_trip_types():
     for visitNumber,testdept in testDepartmentDict.items():
+        deptDistances = []
+        i = 0
         for tripType,traindept in trainDepartmentDict.items():
 
+            # Gets support for relevant departments
             correspondingDepts = { name: traindept[name] for name in testdept.keys() }
-            print calculate_distance(testdept.values(), correspondingDepts.values())
 
-            # for name,support in department.items():
-                # print cluster[name]
+            # Places distance between each cluster into an array
+            deptDistances.append( calculate_distance(testdept.values(), correspondingDepts.values()) )
+        # print deptDistances
+
+        # Finds index n of minimum distance (trip type is nth cluster)
+        idx = deptDistances.index(min(deptDistances))
+        testTripType.append(trainTripType[idx])
+    return
+
 
 create_training_data_dictionary()
 create_testing_data_dictionary()
-classify_trip_type()
+classify_trip_types()
 
-
-# print trainDepartmentDict
-# print testDepartmentDict
+print testTripType
