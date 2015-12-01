@@ -141,3 +141,10 @@ with open('train.csv', 'rb') as csvfile:
     # Rank
     # UPC -> Fineline Number -> Department Description -> Scan Count -> Weekday
 csvfile.close()
+
+print visitNumberIG
+print weekdayIG
+print upcIG
+print scanCountIG
+print departmentIG
+print finelineNumberIG

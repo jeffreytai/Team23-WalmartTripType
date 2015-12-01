@@ -59,7 +59,7 @@ for triptype,products in productsDict.items():
     avgProducts = float(numProducts) / numVisits
     averageProducts[triptype] = avgProducts
 
-# print mostFrequentDept
+print mostFrequentDept
 # print averageProducts
 
 
@@ -113,4 +113,4 @@ for visitnumber,department in testFrequentDept.items():
     else:
         visitToTrip[visitnumber] = candidates[0]
 
-print visitToTrip
+# print visitToTrip
