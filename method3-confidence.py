@@ -5,6 +5,8 @@ visitToTrip = {}
 
 GROCERY_RELATED_DEPT = ["GROCERY DRY GOODS", "SEAFOOD", "FROZEN FOODS", "SERVICE DELI", "DAIRY", "DSD GROCERY", "COMM BREAD", "PRODUCE", "PRE PACKED DELI", "MEAT - FRESH & FROZEN", "GROCERY DRY GOODS"]
 
+# Parameters: collective visit, array of departments (can be just 1), and minimum confidence
+# Returns true if the department(s) satisfy the minimum confidence in the visit
 def meets_confidence( visit, deptArr, minConf ):
     count = len(visit)
     conf = 0.0
@@ -18,6 +20,8 @@ def meets_confidence( visit, deptArr, minConf ):
     else:
         return True
 
+# Similar to the meets_confidence function but checks if the department
+# contains a specific word, rather than matching
 def meets_confidence_if_contains( visit, word, minConf ):
     count = len(visit)
     conf = 0.0
@@ -30,7 +34,8 @@ def meets_confidence_if_contains( visit, word, minConf ):
     else:
         return True
 
-
+# Parameters: a collective visit
+# Assigns a visit to a specific TripType
 def classify( visit ):
     support = len(visit)
 
