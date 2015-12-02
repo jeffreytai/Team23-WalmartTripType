@@ -75,7 +75,7 @@ def divide( num,den ):
     return num / den
 
 # Execution starts here
-with open('train.csv', 'rb') as csvfile:
+with open('../train.csv', 'rb') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
     attributes = reader.next()
 
