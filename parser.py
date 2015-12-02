@@ -37,8 +37,8 @@ for num in range(0,44):
 with open(sys.argv[2], "wb") as csvfile:
 	writer = csv.writer(csvfile, delimiter = ",")
 	writer.writerow(['Visit_number', 'TripType_3', 'TripType_4', 'TripType_5', 'TripType_6'
-		, 'TripType_7', 'TripType_8', 'TripType_9', 'TripType_10', 'TripType_11', 'TripType_12'
-		, 'TripType_13', 'TripType_14', 'TripType_15', 'TripType_16', 'TripType_17', 'TripType_18'
+		, 'TripType_7', 'TripType_8', 'TripType_9', 'TripType_12'
+		, 'TripType_14', 'TripType_15', 'TripType_18'
 		, 'TripType_19', 'TripType_20', 'TripType_21', 'TripType_22', 'TripType_23', 'TripType_24'
 		, 'TripType_25', 'TripType_26', 'TripType_27', 'TripType_28', 'TripType_29', 'TripType_30'
 		, 'TripType_31', 'TripType_32', 'TripType_33', 'TripType_34', 'TripType_35', 'TripType_36'
@@ -52,7 +52,47 @@ with open(sys.argv[2], "wb") as csvfile:
 			row_orig[43] = str(1)
 		else:
 			row_orig[col] = str(1)
-		writer.writerow(row_orig)
+		write_row = []
+		write_row.append(row_orig[0])
+		write_row.append(row_orig[1])
+		write_row.append(row_orig[2])
+		write_row.append(row_orig[3])
+		write_row.append(row_orig[4])
+		write_row.append(row_orig[5])
+		write_row.append(row_orig[6])
+		write_row.append(row_orig[7])
+		write_row.append(row_orig[10])
+		write_row.append(row_orig[12])
+		write_row.append(row_orig[13])
+		write_row.append(row_orig[16])
+		write_row.append(row_orig[17])
+		write_row.append(row_orig[18])
+		write_row.append(row_orig[19])
+		write_row.append(row_orig[20])
+		write_row.append(row_orig[21])
+		write_row.append(row_orig[22])
+		write_row.append(row_orig[23])
+		write_row.append(row_orig[24])
+		write_row.append(row_orig[25])
+		write_row.append(row_orig[26])
+		write_row.append(row_orig[27])
+		write_row.append(row_orig[28])
+		write_row.append(row_orig[29])
+		write_row.append(row_orig[30])
+		write_row.append(row_orig[31])
+		write_row.append(row_orig[32])
+		write_row.append(row_orig[33])
+		write_row.append(row_orig[34])
+		write_row.append(row_orig[35])
+		write_row.append(row_orig[36])
+		write_row.append(row_orig[37])
+		write_row.append(row_orig[38])
+		write_row.append(row_orig[39])
+		write_row.append(row_orig[40])
+		write_row.append(row_orig[41])
+		write_row.append(row_orig[42])
+		write_row.append(row_orig[43])
+		writer.writerow(write_row)
 		if(b[num][1] == 999):
 			row_orig[43] = str(0)
 		else:
